@@ -10,6 +10,7 @@ use Omeka\Api\Representation\SitePageRepresentation;
 use Omeka\Api\Representation\SitePageBlockRepresentation;
 use Omeka\Site\BlockLayout\AbstractBlockLayout;
 use Omeka\Site\Navigation\Translator;
+use Omeka\View\Helper\Api;
 use Teams\Form\Element\AllTeamSelect;
 use Zend\Db\Sql\Select;
 use Zend\Form\Element;
@@ -29,6 +30,7 @@ class ListOfExhibits extends AbstractBlockLayout
      * @var Manager
      */
     protected $moduleManager;
+
 
 //    /**
 //     * @var Translator
@@ -56,17 +58,78 @@ class ListOfExhibits extends AbstractBlockLayout
         return 'List of Exhibits (Mason)'; // @translate
     }
 
-    public function getChildPages($depth = 1)
+    public function getChildPages($block)
     {
+        $indents = [];
+        $iterate = function ($linksIn, $depth = 0) use (&$iterate, &$indents) {
+            foreach ($linksIn as $key => $data) {
+
+                //if we it is a page, then the depth is 0
+                if ('page' === $data['type']) {
+                    $indents[$data['data']['id']] = $depth;
+                }
+                if (isset($data['links'])) {
+                    $iterate($data['links'], $depth + 1);
+                }
+            }
+        };
+
+        //the docstring is wrong so the autosuggest things page() is a SiteRepresentation
+        $site = $block->page()->site();
+
+        $iterate($site->navigation());
+
+        $exhibits_depth = $block->dataValue('child_pages');
+
+
+        $exhibits = [];
+
+        //filter array for values that match given depth
+        foreach ($indents as $page_id => $depth):
+            if ($depth == $exhibits_depth){
+                $exhibits[$page_id] = $depth;
+            }
+        endforeach;
+
+        return $exhibits;
 
     }
 
-    public function getSiblingSites()
+    public function getSiblingSites(SitePageBlockRepresentation $block, PhpRenderer $view)
     {
+        $site = $block->page()->site();
+        $em = $this->entityManager;
+        if ($this->moduleManager->getModule('Teams')){
+            //this is not designed for complex team arrangements where sites belong to multiple teams
+            $site_team = $em->getRepository('Teams\Entity\TeamSite')
+                ->findOneBy(['site'=>$site->id()])->getTeam()->getId();
+            $team_sites = $em->getRepository('Teams\Entity\TeamSite')->findBy(['team'=>$site_team]);
+
+            $pages = [];
+            foreach ($team_sites as $ts):
+                $site =  $view->api()->read('sites', ['id' => $ts->getSite()->getId()])->getContent();
+                if ($site->homepage()){
+                    $pages[] = $site->homepage();
+                } elseif($site->pages()){
+                    $p = $site->pages();
+
+
+                    $pages[] = array_shift($p);
+                }
+            endforeach;
+
+            return $pages;
+
+        }
+
+
+
+
+
 
     }
 
-    public function getAllExhibits()
+    public function getAllExhibits($block)
     {
 
     }
@@ -166,42 +229,25 @@ class ListOfExhibits extends AbstractBlockLayout
 
     public function render(PhpRenderer $view, SitePageBlockRepresentation $block)
     {
-
-        //determine the depth from root of a page in the list of pages
-        $indents = [];
-        $iterate = function ($linksIn, $depth = 0) use (&$iterate, &$indents) {
-            foreach ($linksIn as $key => $data) {
-
-                //if we it is a page, then the depth is 0
-                if ('page' === $data['type']) {
-                    $indents[$data['data']['id']] = $depth;
-                }
-                if (isset($data['links'])) {
-                    $iterate($data['links'], $depth + 1);
-                }
-            }
-        };
-
-        //the docstring is wrong so the autosuggest things page() is a SiteRepresentation
-        $site = $block->page()->site();
-
-        $iterate($site->navigation());
-
-        $exhibits_depth = $block->dataValue('child_pages');
-
-
         $exhibits = [];
+        $siblings = [];
 
-        //filter array for values that match given depth
-        foreach ($indents as $page_id => $depth):
-            if ($depth == $exhibits_depth){
-                $exhibits[$page_id] = $depth;
-            }
-        endforeach;
+        if ($block->dataValue('child_pages')){
+            $exhibits = array_merge($exhibits, $this->getChildPages($block));
+        }
+        if ($block->dataValue('all_exhibits')){
+            $exhibits = array_merge($exhibits, $this->getAllExhibits($block));
+        }
+
+        if ($block->dataValue('sibling_sites')){
+            $siblings = array_merge($siblings, $this->getSiblingSites($block, $view));
+        }
+
 
 
         return $view->partial('common/block-layout/list-of-exhibits', [
             'exhibits' => $exhibits,
+            'siblings' => $siblings
         ]);
     }
 }

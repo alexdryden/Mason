@@ -9,3 +9,12 @@ echo '<li>page id: ' . $key . " has depth of " . $value . '</li>';
 endforeach;
 ?>
 </ul>
+
+<p>here is the array that is being passed right now for site siblings</p>
+<ul>
+    <?php
+    foreach ($this->siblings as $value):
+        echo '<li>page title: ' . $value->title() .  '</li>';
+    endforeach;
+    ?>
+</ul>
