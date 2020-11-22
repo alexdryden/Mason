@@ -2,12 +2,16 @@
 namespace Mason;
 
 use Mason\Service\BlockLayout\ListOfExhibitsFactory;
+use Mason\Service\BlockLayout\ExhibitContentsFactory;
+
 use Mason\Service\Form\Element\TeamSelectFactory;
 
 return [
     'block_layouts' => [
+
         'factories'  => [
-            'listOfExhibits' => ListOfExhibitsFactory::class
+            'listOfExhibits' => ListOfExhibitsFactory::class,
+            'exhibitContents' => ExhibitContentsFactory::class,
 
         ]
     ],
