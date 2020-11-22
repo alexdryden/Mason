@@ -53,6 +53,9 @@ class ListOfExhibits extends AbstractBlockLayout
         'pagination' => false,
     ];
 
+
+
+
     public function getLabel()
     {
         return 'List of Exhibits (Mason)'; // @translate
@@ -96,6 +99,7 @@ class ListOfExhibits extends AbstractBlockLayout
 
     public function getChildPages($block, PhpRenderer $view)
     {
+
         //TODO: first check to to see if the theme has set a default image
         $default_img = $view->assetUrl('img/Default.png', 'Mason');
 
@@ -137,6 +141,9 @@ class ListOfExhibits extends AbstractBlockLayout
 
     public function getSiblingSites(SitePageBlockRepresentation $block, PhpRenderer $view)
     {
+        //TODO: first check to to see if the theme has set a default image
+        $default_img = $view->assetUrl('img/Default.png', 'Mason');
+
         $site = $block->page()->site();
         $em = $this->entityManager;
         if ($this->moduleManager->getModule('Teams')){
@@ -144,6 +151,7 @@ class ListOfExhibits extends AbstractBlockLayout
             $site_team = $em->getRepository('Teams\Entity\TeamSite')
                 ->findOneBy(['site'=>$site->id()])->getTeam()->getId();
             $team_sites = $em->getRepository('Teams\Entity\TeamSite')->findBy(['team'=>$site_team]);
+
 
             $pages = [];
             foreach ($team_sites as $ts):
@@ -158,7 +166,15 @@ class ListOfExhibits extends AbstractBlockLayout
                 }
             endforeach;
 
-            return $pages;
+            $exhibits = [];
+
+            //TODO: should the title really be the title of the homepage or the title of the site?
+            foreach ($pages as $page):
+                $page_id = $page->id();
+                $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
+            endforeach;
+
+            return $exhibits;
 
         }
 
