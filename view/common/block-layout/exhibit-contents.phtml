@@ -1,0 +1,19 @@
+<h2>Mason List of Exhibits: Test View</h2>
+<p>here is an array of page previews based on the depth the user indicated for exhibits</p>
+
+<ul>
+    <?php
+    foreach ($this->exhibits as $key => $value):
+        echo '<li>page id: ' . $key . " has title of " . $value['title'] . '</li>';
+    endforeach;
+    ?>
+</ul>
+
+<p>here is the array that is being passed right now for site siblings</p>
+<ul>
+    <?php
+    foreach ($this->siblings as $value):
+        echo '<li>page title: ' . $value->title() .  '</li>';
+    endforeach;
+    ?>
+</ul>
