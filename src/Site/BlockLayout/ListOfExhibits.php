@@ -58,8 +58,47 @@ class ListOfExhibits extends AbstractBlockLayout
         return 'List of Exhibits (Mason)'; // @translate
     }
 
-    public function getChildPages($block)
+    function getPreview($page_id, $default, $size, PhpRenderer $view){
+        //default thumbnail if the page has no media
+        $img = $default;
+        $alt = 'Exhibit landing page';
+
+        $page = $view->api()->read('site_pages', ['id' => $page_id])->getContent();
+
+        //get the first media attachment on the target page
+        foreach($page->blocks() as $block){
+            if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
+                if ($block->attachments()){
+                    $media = $block->attachments()[0]->media();
+                    $img = $media->thumbnailUrl($size);
+
+                    if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
+                        && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
+                    ) {
+                        $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
+                    } else {
+                        $alt = 'Exhibit landing page';
+                    }
+                    break;
+                }
+            }
+        }
+
+        $title = $page->title();
+        $preview['img_src'] = $img;
+        $preview['alt'] = $alt;
+        $preview['title'] = $title;
+        $preview['url'] = $page->slug();
+        $preview['site_page'] = $page;
+
+        return $preview;
+    }
+
+    public function getChildPages($block, PhpRenderer $view)
     {
+        //TODO: first check to to see if the theme has set a default image
+        $default_img = $view->assetUrl('img/Default.png', 'Mason');
+
         $indents = [];
         $iterate = function ($linksIn, $depth = 0) use (&$iterate, &$indents) {
             foreach ($linksIn as $key => $data) {
@@ -74,7 +113,7 @@ class ListOfExhibits extends AbstractBlockLayout
             }
         };
 
-        //the docstring is wrong so the autosuggest things page() is a SiteRepresentation
+        //the docstring is wrong so the autosuggest thinks page() is a SiteRepresentation
         $site = $block->page()->site();
 
         $iterate($site->navigation());
@@ -84,10 +123,11 @@ class ListOfExhibits extends AbstractBlockLayout
 
         $exhibits = [];
 
+
         //filter array for values that match given depth
         foreach ($indents as $page_id => $depth):
             if ($depth == $exhibits_depth){
-                $exhibits[$page_id] = $depth;
+                $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
             }
         endforeach;
 
@@ -121,11 +161,6 @@ class ListOfExhibits extends AbstractBlockLayout
             return $pages;
 
         }
-
-
-
-
-
 
     }
 
@@ -233,7 +268,7 @@ class ListOfExhibits extends AbstractBlockLayout
         $siblings = [];
 
         if ($block->dataValue('child_pages')){
-            $exhibits = array_merge($exhibits, $this->getChildPages($block));
+            $exhibits = array_merge($exhibits, $this->getChildPages($block, $view));
         }
         if ($block->dataValue('all_exhibits')){
             $exhibits = array_merge($exhibits, $this->getAllExhibits($block));
