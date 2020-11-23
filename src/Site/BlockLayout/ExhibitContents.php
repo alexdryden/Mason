@@ -113,10 +113,26 @@ class ExhibitContents extends AbstractBlockLayout
 
 
         //filter array for values that match given depth
+        echo $block->page()->id() . ': this is the page id<br>';
+
+        /*
+         * This is a pretty dumb way to do it, but for now it is what works. indents is the function used to get the
+         * navigation hierarchy and it is stored in an "ordered" associative array of page_id => depth.
+         */
+        $current_page_id = $block->page()->id();
+        $edge = false;
+        $upper_depth = 0;
         foreach ($indents as $page_id => $depth):
-            if ($depth == $exhibits_depth){
+            echo 'page id ' . $page_id .': depth '. $depth . '<br>';
+            if ($edge === true && $depth<$upper_depth){
                 $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
             }
+            if ($page_id === $current_page_id){
+                $edge = true;
+                $upper_depth = $depth+1+$exhibits_depth;
+            }
+
+
         endforeach;
 
         return $exhibits;
