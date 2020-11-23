@@ -122,12 +122,17 @@ class ExhibitContents extends AbstractBlockLayout
         $edge = false;
         $upper_depth = 0;
         foreach ($indents as $page_id => $depth):
-            if ($edge === true && $depth<$upper_depth){
+            if ($depth <= $upper_depth){
+                $edge = false;
+            }
+            if ($edge === true && $depth<=$upper_depth+$exhibits_depth){
                 $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
+                echo 'page title: ' . $exhibits[$page_id]['title'];
+                echo 'page depth: ' . $depth . '<br>';
             }
             if ($page_id === $current_page_id){
                 $edge = true;
-                $upper_depth = $depth+1+$exhibits_depth;
+                $upper_depth = $depth;
             }
 
 
