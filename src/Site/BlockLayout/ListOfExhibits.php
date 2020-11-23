@@ -198,19 +198,19 @@ class ListOfExhibits extends AbstractBlockLayout
         $data = $block ? $block->data() + $this->defaults : $this->defaults;
 
         $form = new Form();
-        $form->add([
-            'name'=>'o:block[__blockIndex__][o:data][all_exhibits]',
-            'type' => Element\Checkbox::class,
-            'attributes' => array(
-                'id' => 'list-of-exhibits-include-all',
-            ),
-            'options' => [
-                'label' => 'Include all Omeka-s exhibits', // @translate
-                'info' => 'Will attempt to display all exhibit pages from all sites in Omeka-s',
-            ],
-
-
-        ]);
+//        $form->add([
+//            'name'=>'o:block[__blockIndex__][o:data][all_exhibits]',
+//            'type' => Element\Checkbox::class,
+//            'attributes' => array(
+//                'id' => 'list-of-exhibits-include-all',
+//            ),
+//            'options' => [
+//                'label' => 'Include all Omeka-s exhibits', // @translate
+//                'info' => 'Will attempt to display all exhibit pages from all sites in Omeka-s',
+//            ],
+//
+//
+//        ]);
         $form->add([
             'name'=>'o:block[__blockIndex__][o:data][sibling_sites]',
             'type' => Element\Checkbox::class,
@@ -239,36 +239,36 @@ class ListOfExhibits extends AbstractBlockLayout
             ],
 
         ]);
-        $form->add([
-            'name' => 'o:block[__blockIndex__][o:data][team]',
-            'type' => Element\Select::class,
-            'options' => [
-                'label' => 'team',
-                'info' => 'just testing out how to use jquery .chosen in this form',
-                'value_options' => [
-                    '0' => 'French',
-                    '1' => 'English',
-                    '2' => 'Japanese',
-                    '3' => 'Chinese',
-                    '4' => 'French',
-                    '5' => 'English',
-                    '6' => 'Japanese',
-                    '7' => 'Chinese',
-                ],
-                'chosen' => true
-            ],
-           'attributes' => [
-               'id' => 'list-of-exhibits-team',
-               'class' => 'chosen-select',
-               'multiple' => true
-           ]
-
-        ]);
+//        $form->add([
+//            'name' => 'o:block[__blockIndex__][o:data][team]',
+//            'type' => Element\Select::class,
+//            'options' => [
+//                'label' => 'team',
+//                'info' => 'just testing out how to use jquery .chosen in this form',
+//                'value_options' => [
+//                    '0' => 'French',
+//                    '1' => 'English',
+//                    '2' => 'Japanese',
+//                    '3' => 'Chinese',
+//                    '4' => 'French',
+//                    '5' => 'English',
+//                    '6' => 'Japanese',
+//                    '7' => 'Chinese',
+//                ],
+//                'chosen' => true
+//            ],
+//           'attributes' => [
+//               'id' => 'list-of-exhibits-team',
+//               'class' => 'chosen-select',
+//               'multiple' => true
+//           ]
+//
+//        ]);
 
 
 
         $form->setData([
-            'o:block[__blockIndex__][o:data][all_exhibits]' => $data['all_exhibits'],
+//            'o:block[__blockIndex__][o:data][all_exhibits]' => $data['all_exhibits'],
             'o:block[__blockIndex__][o:data][sibling_sites]' => $data['sibling_sites'],
             'o:block[__blockIndex__][o:data][child_pages]' => $data['child_pages'],
 //            'o:block[__blockIndex__][o:data][limit]' => $data['limit'],
