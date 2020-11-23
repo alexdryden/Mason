@@ -156,7 +156,7 @@ class ExhibitContents extends AbstractBlockLayout
             'options' => [
                 'label' => 'Include pages that are n-deep from this page', // @translate
                 'info' => "In most cases this is 1. Use 1 if this page is your exhibit homepage, and child pages are the 
-                primary organizational units of the exhibit(e.g., chapters",
+                primary organizational units of the exhibit(e.g., chapters)",
             ],
 
         ]);
