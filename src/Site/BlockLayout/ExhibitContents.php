@@ -127,8 +127,7 @@ class ExhibitContents extends AbstractBlockLayout
             }
             if ($edge === true && $depth<=$upper_depth+$exhibits_depth){
                 $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
-                echo 'page title: ' . $exhibits[$page_id]['title'];
-                echo 'page depth: ' . $depth . '<br>';
+
             }
             if ($page_id === $current_page_id){
                 $edge = true;
