@@ -130,7 +130,7 @@ class ListOfExhibits extends AbstractBlockLayout
 
         //filter array for values that match given depth
         foreach ($indents as $page_id => $depth):
-            if ($depth == $exhibits_depth){
+            if ($depth == $exhibits_depth-1){
                 $exhibits[$page_id] = $this->getPreview($page_id, $default_img,'large', $view);
             }
         endforeach;
