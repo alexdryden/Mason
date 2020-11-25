@@ -234,8 +234,7 @@ class ListOfExhibits extends AbstractBlockLayout
             ),
             'options' => [
                 'label' => 'Include pages that are n-deep in this site', // @translate
-                'info' => "In most cases this is 1. E.g., this page is your unit homepage, and child pages are the landing
-                pages for your unit's exhibits",
+                'info' => "In most cases this is 1.",
             ],
 
         ]);
