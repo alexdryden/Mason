@@ -310,13 +310,14 @@ class ListOfExhibits extends AbstractBlockLayout
             $siblings = array_merge($siblings, $this->getSiblingSites($block, $view));
         }
 
-
+        $exclude_id = $block->page()->id();
 
 
         return $view->partial('common/block-layout/list-of-exhibits', [
             'exhibits' => $exhibits,
             'siblings' => $siblings,
             'include_self' => $block->dataValue('include_self'),
+            'exclude_id' => $exclude_id
         ]);
     }
 }
