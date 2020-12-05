@@ -300,14 +300,14 @@ class ListOfExhibits extends AbstractBlockLayout
         $siblings = [];
 
         if ($block->dataValue('child_pages')){
-            $exhibits = array_merge($exhibits, $this->getChildPages($block, $view));
+            $exhibits = $exhibits + $this->getChildPages($block, $view);
         }
         if ($block->dataValue('all_exhibits')){
-            $exhibits = array_merge($exhibits, $this->getAllExhibits($block));
+            $exhibits = $exhibits + $this->getAllExhibits($block);
         }
 
         if ($block->dataValue('sibling_sites')){
-            $siblings = array_merge($siblings, $this->getSiblingSites($block, $view));
+            $siblings = $siblings + $this->getSiblingSites($block, $view);
         }
 
         $exclude_id = $block->page()->id();
