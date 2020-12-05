@@ -229,14 +229,29 @@ class ListOfExhibits extends AbstractBlockLayout
             'type' => Element\Number::class,
             'attributes' => array(
                 'id' => 'list-of-exhibits-include-children',
-                'placeholder' => 'Select a value for n'
+                'value' => 1,
+                'default' => 1,
+                'placeholder' => 'select a value for n',
 
             ),
             'options' => [
                 'label' => 'Include pages that are n-deep in this site', // @translate
                 'info' => "In most cases this is 1.",
+
             ],
 
+        ])->setValue('1');
+        $form->add([
+            'name'=> 'o:block[__blockIndex__][o:data][include_self]',
+            'type' => Element\Checkbox::class,
+            'attributes' => array(
+                'id' => 'list-of-exhibits-include-self',
+                'default' => false,
+            ),
+            'options' => [
+                'label' => 'Include this page in the list of exhibits?', // @translate
+                'info' => "Uncommon, usually this should be unchecked.",
+            ],
         ]);
 //        $form->add([
 //            'name' => 'o:block[__blockIndex__][o:data][team]',
@@ -270,6 +285,8 @@ class ListOfExhibits extends AbstractBlockLayout
 //            'o:block[__blockIndex__][o:data][all_exhibits]' => $data['all_exhibits'],
             'o:block[__blockIndex__][o:data][sibling_sites]' => $data['sibling_sites'],
             'o:block[__blockIndex__][o:data][child_pages]' => $data['child_pages'],
+            'o:block[__blockIndex__][o:data][include_self]' => $data['include_self'],
+
 //            'o:block[__blockIndex__][o:data][limit]' => $data['limit'],
 //            'o:block[__blockIndex__][o:data][pagination]' => $data['pagination'],
         ]);
@@ -295,9 +312,11 @@ class ListOfExhibits extends AbstractBlockLayout
 
 
 
+
         return $view->partial('common/block-layout/list-of-exhibits', [
             'exhibits' => $exhibits,
-            'siblings' => $siblings
+            'siblings' => $siblings,
+            'include_self' => $block->dataValue('include_self'),
         ]);
     }
 }
