@@ -56,17 +56,22 @@ class ExhibitContents extends AbstractBlockLayout
         foreach($page->blocks() as $block){
             if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
                 if ($block->attachments()){
-                    $media = $block->attachments()[0]->media();
-                    $img = $media->thumbnailUrl($size);
-
-                    if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
-                        && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
-                    ) {
-                        $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
-                    } else {
-                        $alt = 'Exhibit landing page';
-                    }
-                    break;
+                    foreach($block->attachments() as $attachment):
+                        if ($attachment->item()){
+                            $media = $attachment->item()->primaryMedia();
+                            if ($media){
+                                $img = $media->thumbnailUrl($size);
+                                if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
+                                    && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
+                                ) {
+                                    $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
+                                } else {
+                                    $alt = 'Exhibit landing page';
+                                }
+                                break;
+                            }
+                     }
+                    endforeach;
                 }
             }
         }
