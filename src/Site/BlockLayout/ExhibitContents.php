@@ -55,26 +55,31 @@ class ExhibitContents extends AbstractBlockLayout
         //get the first media attachment on the target page
         foreach($page->blocks() as $block){
             if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
-                if ($block->attachments()){
-                    $media = false;
-                    foreach ($block->attachments() as $attachment):
-                        if($attachment->media()){
-                            $media = $block->attachments()[0]->media();
-                        } elseif ($block->attachments()[0]->item()->primaryMedia()){
-                            $media = $block->attachments()[0]->item()->primaryMedia();
+                foreach($page->blocks() as $block){
+                    if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
+                        if ($block->attachments()){
+                            $media = false;
+                            foreach ($block->attachments() as $attachment):
+                                if($attachment->media()){
+                                    $media = $block->attachments()[0]->media();
+                                } elseif ($block->attachments()[0]->item()->primaryMedia()){
+                                    $media = $block->attachments()[0]->item()->primaryMedia();
+                                }
+                                if ($media){
+                                    $img = $media->thumbnailUrl($size);
+                                    if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
+                                        && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
+                                    ) {
+                                        $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
+                                    } else {
+                                        $alt = 'Thumbnail preview for next page';
+                                    }
+                                    break 2;
+                                }
+                            endforeach;
                         }
-                        if ($media){
-                            $url = $media->thumbnailUrl($size);
-                            if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
-                                && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
-                            ) {
-                                $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
-                            } else {
-                                $alt = 'Thumbnail preview for next page';
-                            }
-                            break 2;
-                        }
-                    endforeach;
+
+                    }
                 }
             }
         }
