@@ -211,19 +211,19 @@ class ListOfExhibits extends AbstractBlockLayout
 //
 //
 //        ]);
-        $form->add([
-            'name'=>'o:block[__blockIndex__][o:data][sibling_sites]',
-            'type' => Element\Checkbox::class,
-            'attributes' => array(
-                'id' => 'list-of-exhibits-include-siblings'
-            ),
-            'options' => [
-                'label' => 'Include other sites', // @translate
-                'info' => 'For cases when exhibits are given their own site. If Teams module is installed, exhibit index
-                 will include siblings in the same team. Otherwise, it will include all Omeka-s sites.',
-            ],
-
-        ]);
+//        $form->add([
+//            'name'=>'o:block[__blockIndex__][o:data][sibling_sites]',
+//            'type' => Element\Checkbox::class,
+//            'attributes' => array(
+//                'id' => 'list-of-exhibits-include-siblings'
+//            ),
+//            'options' => [
+//                'label' => 'Include other sites', // @translate
+//                'info' => 'For cases when exhibits are given their own site. If Teams module is installed, exhibit index
+//                 will include siblings in the same team. Otherwise, it will include all Omeka-s sites.',
+//            ],
+//
+//        ]);
         $form->add([
             'name'=>'o:block[__blockIndex__][o:data][child_pages]',
             'type' => Element\Number::class,
