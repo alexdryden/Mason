@@ -1,19 +1,25 @@
-<h2>Mason List of Exhibits: Test View</h2>
-<p>here is an array of page previews based on the depth the user indicated for exhibits</p>
-
+<div style="clear: both"></div>
+<h2>List of Exhibits</h2>
 <ul>
 <?php
-foreach ($this->exhibits as $key => $value):
-echo '<li>page id: ' . $key . " has title of " . $value['title'] . '</li>';
-endforeach;
-?>
+$exhibits = $this->exhibits + $this->siblings;
+if (! $this->include_self){
+    unset($exhibits[$this->current_page]);
+}
+foreach ($exhibits as $page_id => $preview) : ?>
+
+    <li style="list-style: none">
+        <div style="background: whitesmoke; width: 300px;">
+
+            <a href="<?php echo $preview['url']; ?>">
+                <img alt="<?php echo $preview['alt'] ?>" src="<?php echo $preview['img_src'] ?>" style="max-width: 300px;"/>
+            </a>
+            <h3>
+                <a href="<?php echo $preview['url']; ?>"><?php echo $preview['title']; ?></a>
+            </h3>
+        </div>
+
+    </li>
+<?php endforeach; ?>
 </ul>
 
-<p>here is the array that is being passed right now for site siblings</p>
-<ul>
-    <?php
-    foreach ($this->siblings as $value):
-        echo '<li>page title: ' . $value->title() .  '</li>';
-    endforeach;
-    ?>
-</ul>
