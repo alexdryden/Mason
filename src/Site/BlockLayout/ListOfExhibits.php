@@ -69,23 +69,36 @@ class ListOfExhibits extends AbstractBlockLayout
         $page = $view->api()->read('site_pages', ['id' => $page_id])->getContent();
 
         //get the first media attachment on the target page
-        foreach($page->blocks() as $block){
-            if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
-                if ($block->attachments()){
-                    $media = $block->attachments()[0]->media();
-                    $img = $media->thumbnailUrl($size);
 
-                    if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
-                        && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
-                    ) {
-                        $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
-                    } else {
-                        $alt = 'Exhibit landing page';
+                foreach($page->blocks() as $block){
+                    if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
+                        if ($block->attachments()){
+                            $media = false;
+                            echo 'this is the count: ' . count($block->attachments());
+
+                            foreach ($block->attachments() as $attachment):
+                                if($attachment->media()){
+                                    $media = $attachment->media();
+                                } elseif ($attachment->item()->primaryMedia()){
+                                    $media = $attachment->item()->primaryMedia();
+                                }
+                                if ($media){
+                                    $img = $media->thumbnailUrl($size);
+                                    if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
+                                        && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
+                                    ) {
+                                        $alt = $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text'];
+                                    } else {
+                                        $alt = 'Thumbnail preview for next page';
+                                    }
+                                    break 2;
+                                }
+                            endforeach;
+                        }
                     }
-                    break;
                 }
-            }
-        }
+
+
 
         $title = $page->title();
         $preview['img_src'] = $img;
