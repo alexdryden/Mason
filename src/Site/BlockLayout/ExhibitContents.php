@@ -57,11 +57,13 @@ class ExhibitContents extends AbstractBlockLayout
             if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
                 if ($block->attachments()){
                     $media = false;
+                    echo 'this is the count: ' . count($block->attachments());
+
                     foreach ($block->attachments() as $attachment):
                         if($attachment->media()){
-                            $media = $block->attachments()[0]->media();
-                        } elseif ($block->attachments()[0]->item()->primaryMedia()){
-                            $media = $block->attachments()[0]->item()->primaryMedia();
+                            $media = $attachment->media();
+                        } elseif ($attachment->item()->primaryMedia()){
+                            $media = $attachment->item()->primaryMedia();
                         }
                         if ($media){
                             $img = $media->thumbnailUrl($size);
