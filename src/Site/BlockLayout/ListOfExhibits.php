@@ -74,8 +74,6 @@ class ListOfExhibits extends AbstractBlockLayout
                     if (get_class($block) === 'Omeka\Api\Representation\SitePageBlockRepresentation'){
                         if ($block->attachments()){
                             $media = false;
-                            echo 'this is the count: ' . count($block->attachments());
-
                             foreach ($block->attachments() as $attachment):
                                 if($attachment->media()){
                                     $media = $attachment->media();
