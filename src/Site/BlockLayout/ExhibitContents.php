@@ -81,6 +81,7 @@ class ExhibitContents extends AbstractBlockLayout
             }
         }
 
+
         $title = $page->title();
         $preview['img_src'] = $img;
         $preview['alt'] = $alt;
