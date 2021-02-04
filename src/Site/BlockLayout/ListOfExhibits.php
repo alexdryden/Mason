@@ -58,7 +58,7 @@ class ListOfExhibits extends AbstractBlockLayout
 
     public function getLabel()
     {
-        return 'List of Exhibits (Mason)'; // @translate
+        return 'List of Exhibits (KSharp)'; // @translate
     }
 
     function getPreview($page_id, $default, $size, PhpRenderer $view){

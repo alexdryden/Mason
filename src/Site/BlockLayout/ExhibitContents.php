@@ -42,7 +42,7 @@ class ExhibitContents extends AbstractBlockLayout
 
     public function getLabel()
     {
-        return 'Exhibit Contents (Mason)'; // @translate
+        return 'Exhibit Contents (KSharp)'; // @translate
     }
 
     function getPreview($page_id, $default, $size, PhpRenderer $view){
