@@ -81,7 +81,11 @@ class ListOfExhibits extends AbstractBlockLayout
                                     $media = $attachment->item()->primaryMedia();
                                 }
                                 if ($media){
-                                    $img = $media->thumbnailUrl($size);
+                                    if ($thumbnail = $media->thumbnail()) {
+                                        $img = $thumbnail->assetUrl();
+                                    } else {
+                                        $img = $media->thumbnailUrl($size);
+                                    }
                                     if (array_key_exists('o-module-alt-text:alt-text', $media->primaryMedia()->jsonSerialize())
                                         && $media->primaryMedia()->jsonSerialize()['o-module-alt-text:alt-text']
                                     ) {
